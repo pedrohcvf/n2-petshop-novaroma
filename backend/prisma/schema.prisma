@@ -54,7 +54,7 @@ model Tutors {
   id_tutor     BigInt         @id @default(autoincrement())
   name         String         @db.VarChar(255)
   email        String         @db.VarChar(255)
-  phone        String         @db.VarChar(11)
+  phone        String         @db.VarChar(15)
   address      String         @db.VarChar(255)
   Pets         Pets[]
   Appointments Appointments[]
