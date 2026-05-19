@@ -7,3 +7,106 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+enum typeEnum {
+  BATH
+  SHEAR
+  CONSULT
+  VACCINATION
+
+  @@map("type_Enum")
+}
+
+enum productEnum {
+  RATION
+  TOYS
+  MEDICINES
+
+  @@map("product_Enum")
+}
+
+enum stateEnum {
+  REQUESTED
+  PROCESSING
+  PENDING
+  DONE
+
+  @@map("state_Enum")
+}
+
+model Pets {
+  id_pets     BigInt @id @default(autoincrement())
+  name        String @db.VarChar(255)
+  specie      String @db.VarChar(255)
+  gender      String @db.VarChar(1)
+  fk_tutor_id BigInt
+
+  tutor        Tutors         @relation(fields: [fk_tutor_id], references: [id_tutor])
+  Appointments Appointments[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pets")
+}
+
+model Tutors {
+  id_tutor     BigInt         @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  email        String         @db.VarChar(255)
+  phone        String         @db.VarChar(11)
+  address      String         @db.VarChar(255)
+  Pets         Pets[]
+  Appointments Appointments[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tutors")
+}
+
+model Services {
+  id_services  BigInt         @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  description  String         @db.VarChar(255)
+  price        Decimal        @db.Money()
+  type         typeEnum
+  Appointments Appointments[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Products {
+  id_products BigInt      @id @default(autoincrement())
+  name        String      @db.VarChar(255)
+  description String      @db.VarChar(255)
+  price       Decimal     @db.Money()
+  stock       Int
+  products    productEnum
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("products")
+}
+
+model Appointments {
+  id_appointments BigInt    @id @default(autoincrement())
+  scheduled_date  DateTime
+  status          stateEnum @default(REQUESTED)
+  fk_tutor_id     BigInt
+  fk_pet_id       BigInt
+  fk_service_id   BigInt
+
+  tutor   Tutors   @relation(fields: [fk_tutor_id], references: [id_tutor])
+  pet     Pets     @relation(fields: [fk_pet_id], references: [id_pets])
+  service Services @relation(fields: [fk_service_id], references: [id_services])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("appointments")
+}
