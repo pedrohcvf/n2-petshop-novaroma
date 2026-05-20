@@ -3,7 +3,7 @@ import { createTutorsSchema, updateTutorsSchema } from "../schemas/tutorsSchema"
 import { returnNumberedID } from "../utils/utils"
 import { AppError } from "../errors/AppError";
 import { HTTPCODES } from "../utils/httpCodes";
-import {prisma} from "../utils/prisma";
+import { prisma } from "../utils/prisma";
 
 type CreateTutorsDTO = z.infer<typeof createTutorsSchema>;
 type UpdateTutorsDTO = z.infer<typeof updateTutorsSchema>;
@@ -21,7 +21,7 @@ export async function getById(tutorIdS: string | string[]) {
         throw new AppError("ID do Tutor inválido.", HTTPCODES.BADREQUEST);
     }
 
-    const tutor = await repository.tutors.findUnique({where: {id_tutors: tutorId}});
+    const tutor = await repository.tutors.findUnique({where: {id_tutor: tutorId}});
 
     if (!tutor) {
         throw new AppError("Tutor não encontrado.", HTTPCODES.NOTFOUND);
@@ -50,17 +50,17 @@ export async function update(tutorsIdS: string | string[], body: UpdateTutorsDTO
 
     const alreadyExists = await repository.tutors.findFirst({where: {name: name}});
 
-    if (alreadyExists && Number(alreadyExists.tutors_id) !== tutorId) {
+    if (alreadyExists && Number(alreadyExists.id_tutor) !== tutorId) {
         throw new AppError("Um Tutor já existe com esse nome", HTTPCODES.BADREQUEST);
     }
 
-    const tutor = await repository.tutors.findUnique({where: {tutors_id: tutorId}});
+    const tutor = await repository.tutors.findUnique({where: {id_tutor: tutorId}});
 
     if (!tutor) {
         throw new AppError("Tutor não encontrado.", HTTPCODES.NOTFOUND);
     }
 
-    return repository.tutors.update({where: {tutors_id: tutorId}, data: body});
+    return repository.tutors.update({where: {id_tutor: tutorId}, data: body});
 }
 
 export async function deleteById(tutorsIdS: string | string[]) {
@@ -70,11 +70,11 @@ export async function deleteById(tutorsIdS: string | string[]) {
         throw new AppError("ID do Tutor inválido.", HTTPCODES.BADREQUEST);
     }
 
-    const doesTutorExists = await repository.tutors.findUnique({where: {tutors_id: tutorId}});
+    const doesTutorExists = await repository.tutors.findUnique({where: {id_tutor: tutorId}});
 
     if (!doesTutorExists) {
         throw new AppError("Tutor não encontrado.", HTTPCODES.NOTFOUND);
     }
 
-    return repository.tutors.delete({where: {tutors_id: tutorId}});
+    return repository.tutors.delete({where: {id_tutor: tutorId}});
 }

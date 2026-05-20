@@ -1,8 +1,10 @@
 import { Router } from "express";
-import tutorsRoute from "./tutorsRoute";
+import tutorsRoutes from "./tutorsRoutes";
+import productsRoutes from "./productsRoutes";
 
 const router = Router();
 
-router.get("/test", tutorsRoute);
+router.use("/tutors", tutorsRoutes);
+router.use("/products", productsRoutes)
 
 export default router;

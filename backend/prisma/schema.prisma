@@ -80,12 +80,12 @@ model Services {
 }
 
 model Products {
-  id_products BigInt      @id @default(autoincrement())
-  name        String      @db.VarChar(255)
-  description String      @db.VarChar(255)
-  price       Decimal     @db.Money()
-  stock       Int
-  products    productEnum
+  id_products  BigInt      @id @default(autoincrement())
+  name         String      @db.VarChar(255)
+  description  String      @db.VarChar(255)
+  price        Decimal     @db.Money()
+  stock        Int
+  product_type productEnum
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
