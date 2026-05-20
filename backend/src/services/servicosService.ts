@@ -13,7 +13,7 @@ const repository = prisma;
 
 // LISTAR TODOS OS SERVIÇOS
 export async function getAll(){
-    return repository.findMany();
+    return repository.services.findMany();
 }
 
 // LISTAR SERVIÇO POR ID
@@ -49,12 +49,40 @@ export async function update(idS: string | string[], body: UpdateServicosDto){
     const id = returnNumberedID(idS);
 
     if (!id){
-        throw new AppError("ID do serviço não encontrado", HTTPCODES.BADREQUEST);
+        throw new AppError("ID do serviço inválido", HTTPCODES.BADREQUEST);
     }
 
-    const servico = await repository.services.findUnique({where:{id:id}});
+    const servico = await repository.services.findUnique({where: {id_services:id}});
 
     if(!servico){
-
+        throw new AppError("Serviço não encontrado", HTTPCODES.NOTFOUND);
     }
+
+    if (body.name){
+        const alreadyExists = await repository.services.findFirst({where:{name:body.name}});
+
+        if (alreadyExists && Number(alreadyExists.id_services) != id){
+            throw new AppError("Já existe um serviço com esse nome", HTTPCODES.BADREQUEST);
+        }
+    }
+
+    return repository.services.update({where: {id_services:id}, data: body});
+
+}
+
+// DELETAR SERVIÇO
+export async function deleteById(idS: string | string[]){
+    const id = returnNumberedID(idS);
+
+    if (!id){
+        throw new AppError("ID do serviço inválido.", HTTPCODES.BADREQUEST)
+    }
+
+    const servico = await repository.services.findUnique({where: {id_services:id}});
+
+    if(!servico){
+        throw new AppError("Serviço não encontrado.", HTTPCODES.NOTFOUND);
+    }
+
+    return repository.services.delete({where: {id_services:id}});
 }
