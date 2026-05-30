@@ -38,6 +38,7 @@ model Pets {
   id_pets     BigInt @id @default(autoincrement())
   name        String @db.VarChar(255)
   specie      String @db.VarChar(255)
+  race        String @db.VarChar(255)
   gender      String @db.VarChar(1)
   fk_tutor_id BigInt
 
